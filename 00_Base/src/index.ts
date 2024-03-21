@@ -172,3 +172,6 @@ export const CALL_RESULT_SCHEMA_MAP: Map<CallAction, object> = new Map<CallActio
     [CallAction.UnpublishFirmware, UnpublishFirmwareResponseSchema],
     [CallAction.UpdateFirmware, UpdateFirmwareResponseSchema],
 ]);
+
+// OICP 2.3 Interfaces
+export * from './oicp';
