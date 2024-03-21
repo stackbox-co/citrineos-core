@@ -19,6 +19,7 @@ export { DeviceModelRepository } from "./repository/DeviceModel";
 export { TransactionEventRepository } from "./repository/TransactionEvent";
 export { SecurityEventRepository } from "./repository/SecurityEvent";
 export { VariableMonitoringRepository } from "./repository/VariableMonitoring";
+export { OicpEvseDataRecordRepository } from "./repository/OicpEvseDataRecord";
 
 // Sequelize Utilities
 export { DefaultSequelizeInstance } from "./util";

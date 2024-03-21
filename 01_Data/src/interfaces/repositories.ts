@@ -26,7 +26,7 @@ import {
     SetMonitoringDataType,
     SetMonitoringResultType,
     EventDataType,
-    SetMonitoringStatusEnumType, CallAction
+    SetMonitoringStatusEnumType, CallAction, EvseDataRecord
 } from "@citrineos/base";
 import { AuthorizationQuerystring } from "./queries/Authorization";
 import { Transaction } from "../layers/sequelize/model/TransactionEvent";
@@ -88,4 +88,8 @@ export interface IVariableMonitoringRepository extends ICrudRepository<VariableM
     rejectVariableMonitoringByIdAndStationId(action: CallAction, id: number, stationId: string): Promise<void>
     updateResultByStationId(result: SetMonitoringResultType, stationId: string): Promise<VariableMonitoring | undefined>
     createEventDatumByComponentIdAndVariableIdAndStationId(event: EventDataType, componentId: string, variableId: string, stationId: string): Promise<EventData>
+}
+
+export interface IOicpEvseDataRecordRepository extends ICrudRepository<EvseDataRecord> {
+
 }

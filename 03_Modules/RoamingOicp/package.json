@@ -1,0 +1,32 @@
+{
+  "name": "@citrineos/roamingoicp",
+  "version": "1.0.0",
+  "description": "The Roaming module for OICP v2.3. This module is not intended to be used directly, but rather as a dependency for other modules.",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "npx eslint",
+    "prepare": "npm run build",
+    "build": "tsc",
+    "refresh-base": "cd ../../00_Base && npm run build && npm pack && cd ../03_Modules/RoamingOicp && npm install ../../00_Base/citrineos-base-1.0.0.tgz",
+    "refresh-data": "cd ../../01_Data && npm run build && npm pack && cd ../03_Modules/RoamingOicp && npm install ../../01_Data/citrineos-data-1.0.0.tgz",
+    "refresh-util": "cd ../../02_Util && npm run build && npm pack && cd ../03_Modules/RoamingOicp && npm install ../../02_Util/citrineos-util-1.0.0.tgz",
+    "install-all": "npm install ../../00_Base/citrineos-base-1.0.0.tgz && npm install ../../02_Util/citrineos-util-1.0.0.tgz && npm install ../../01_Data/citrineos-data-1.0.0.tgz",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "oicp",
+    "oicp_v23"
+  ],
+  "author": "Stackbox GmbH",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/deasync-promise": "^1.0.0",
+    "eslint": "^8.48.0",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "@citrineos/base": "file:../../00_Base/citrineos-base-1.0.0.tgz",
+    "@citrineos/data": "file:../../01_Data/citrineos-data-1.0.0.tgz",
+    "@citrineos/util": "file:../../02_Util/citrineos-util-1.0.0.tgz"
+  }
+}
