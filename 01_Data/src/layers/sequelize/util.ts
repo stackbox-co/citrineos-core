@@ -15,6 +15,7 @@ import { SecurityEvent } from "./model/SecurityEvent";
 import { ComponentVariable } from "./model/DeviceModel/ComponentVariable";
 import {EventData, VariableMonitoring} from "./model/VariableMonitoring";
 import {VariableMonitoringStatus} from "./model/VariableMonitoring/VariableMonitoringStatus";
+import { OicpEvseDataRecord } from "./model/ERoaming/EvseDataRecord";
 
 export class DefaultSequelizeInstance {
 
@@ -49,7 +50,8 @@ export class DefaultSequelizeInstance {
             models: [AdditionalInfo, Authorization, Boot,
                 Component, ComponentVariable, Evse, EventData, IdToken, IdTokenInfo, MeterValue,
                 SecurityEvent, Transaction, TransactionEvent, VariableAttribute,
-                VariableCharacteristics, VariableMonitoring, VariableMonitoringStatus, VariableStatus, Variable],
+                VariableCharacteristics, VariableMonitoring, VariableMonitoringStatus, VariableStatus, Variable, 
+                OicpEvseDataRecord ],
             logging: (sql: string, timing?: number) => {
                 // TODO: Look into fixing that
                 // sequelizeLogger.debug(timing, sql);

@@ -7,5 +7,5 @@
  * Persisted DataTypes and their namespaces
  */
 export enum OcpiNamespace {
-    Evse = 'Evse',
+    EvseDataRecord = 'EvseDataRecord',
 }
