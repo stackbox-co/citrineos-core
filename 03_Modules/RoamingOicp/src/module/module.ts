@@ -4,10 +4,7 @@
 // SPDX-License-Identifier: Apache 2.0
 
 import { AbstractModule, CallAction, EventGroup, ICache, IMessageHandler, IMessageSender, SystemConfig } from "@citrineos/base";
-import {
-    IOicpEvseDataRecordRepository,
-    sequelize
-  } from "@citrineos/data";
+import { IOicpEvseDataRecordRepository, sequelize } from "@citrineos/data";
 import { RabbitMqReceiver, RabbitMqSender, Timer } from "@citrineos/util";
 import deasyncPromise from "deasync-promise";
 import { ILogObj, Logger } from 'tslog';
