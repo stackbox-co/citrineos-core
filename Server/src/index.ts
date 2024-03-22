@@ -17,6 +17,7 @@ import { TransactionsModule, TransactionsModuleApi } from '@citrineos/transactio
 import { CertificatesModule, CertificatesModuleApi } from '@citrineos/certificates';
 import { EVDriverModule, EVDriverModuleApi } from '@citrineos/evdriver';
 import { ReportingModule, ReportingModuleApi } from '@citrineos/reporting';
+import { RoamingOicpModule } from '@citrineos/roamingoicp';
 import { SmartChargingModule, SmartChargingModuleApi } from '@citrineos/smartcharging';
 import { sequelize } from '@citrineos/data';
 
@@ -95,12 +96,14 @@ class CitrineOSServer {
         const evdriverModule = new EVDriverModule(this._config, this._cache, this._createSender(), this._createHandler(), this._logger);
         const monitoringModule = new MonitoringModule(this._config, this._cache, this._createSender(), this._createHandler(), this._logger);
         const reportingModule = new ReportingModule(this._config, this._cache, this._createSender(), this._createHandler(), this._logger);
+        const roamingOicpModule = new RoamingOicpModule(this._config, this._cache, this._createSender(), this._createHandler(), this._logger);
         const transactionsModule = new TransactionsModule(this._config, this._cache, this._createSender(), this._createHandler(), this._logger);
         this._modules = [
             configurationModule,
             evdriverModule,
             monitoringModule,
             reportingModule,
+            roamingOicpModule,
             transactionsModule
         ]
         this._apis = [
