@@ -2,7 +2,11 @@
   "name": "@citrineos/roamingoicp",
   "version": "1.0.0",
   "description": "The Roaming module for OICP v2.3. This module is not intended to be used directly, but rather as a dependency for other modules.",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "prepublish": "npx eslint",
     "prepare": "npm run build",
