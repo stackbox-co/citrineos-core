@@ -3,4 +3,6 @@
 //
 // SPDX-License-Identifier: Apache 2.0
 
+export { RoamingOicpModuleApi } from "./module/api";
+export { IRoamingOicpModuleApi } from "./module/interface";
 export { RoamingOicpModule } from './module/module';

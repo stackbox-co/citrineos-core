@@ -175,3 +175,4 @@ export const CALL_RESULT_SCHEMA_MAP: Map<CallAction, object> = new Map<CallActio
 
 // OICP 2.3 Interfaces
 export * from './oicp';
+export * from "./oicp/persistence";

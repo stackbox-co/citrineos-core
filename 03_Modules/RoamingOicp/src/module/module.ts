@@ -14,6 +14,10 @@ export class RoamingOicpModule extends AbstractModule {
     protected _responses: CallAction[] = [];
     protected _evseDataRecordRepository: IOicpEvseDataRecordRepository;
 
+    get evseDataRecordRepository(): IOicpEvseDataRecordRepository {
+        return this._evseDataRecordRepository;
+    }
+
     /**
      * This is the constructor function that initializes the {@link RoamingOicpModule}.
      * 
