@@ -51,7 +51,7 @@ export class RoamingOicpModule extends AbstractModule {
         this._logger.info(`Initializing...`);
 
         if (!deasyncPromise(this._initHandler(this._requests, this._responses))) {
-        throw new Error("Could not initialize module due to failure in handler initialization.");
+            throw new Error("Could not initialize module due to failure in handler initialization.");
         }
 
         this._evseDataRecordRepository = evseDataRecordRepository || new sequelize.OicpEvseDataRecordRepository(config, this._logger);
