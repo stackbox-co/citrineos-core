@@ -9,6 +9,9 @@ import { IRoamingOicpModuleApi } from "./interface";
 import { RoamingOicpModule } from "./module";
 import { FastifyInstance, FastifyRequest } from "fastify";
 
+// const querySchema = {"properties": {"evseId": {"type": "string",}}, "required": ["evseId"]}
+const querySchema = {"evseId": {"type": "string",}}
+
 /**
  * Server API for the RoamingOicp module.
  */
@@ -21,11 +24,12 @@ export class RoamingOicpModuleApi extends AbstractModuleApi<RoamingOicpModule> i
     /**
      * Data Endpoints
      */
-
-    @AsDataEndpoint(Namespace.VariableAttributeType, HttpMethod.Put, EvseDataRecordSchema)
-    async putDeviceModelVariables(request: FastifyRequest<{ Body: EvseDataRecord, }>): Promise<EvseDataRecord> {
-        return this._module.evseDataRecordRepository.create(request.body, ).then(async evseDateRecord => {
-            return evseDateRecord!;
-        });
+    @AsDataEndpoint(Namespace.VariableAttributeType, HttpMethod.Put, querySchema, EvseDataRecordSchema)
+    async putEvseDataRecord(request: FastifyRequest<{ Body: EvseDataRecord, Querystring: { evseId: string; }}>): Promise<EvseDataRecord> {
+        // return this._module.evseDataRecordRepository.create(request.body, ).then(async evseDateRecord => {
+        //     return evseDateRecord!;
+        // });
+        this._logger.info("putEvseDataRecord called");
+        return request.body;
     }
 }
