@@ -37,7 +37,6 @@ export enum EventGroup {
 export { IMessage, Message } from "./Message";
 export { IMessageHandler } from "./MessageHandler";
 export { IMessageSender } from "./MessageSender";
-export { IMessageRouter } from "./MessageRouter";
 export { IMessageContext } from "./MessageContext";
 export { IMessageConfirmation } from "./MessageConfirmation";
 export { AbstractMessageHandler } from "./AbstractMessageHandler";

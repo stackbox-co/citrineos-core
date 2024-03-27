@@ -2,10 +2,14 @@
 // Copyright Contributors to the CitrineOS Project
 //
 // SPDX-License-Identifier: Apache 2.0
-
-import { EventGroup, ICache, ICentralSystem, IMessageHandler, IMessageSender, IModule, IModuleApi, SystemConfig } from '@citrineos/base';
+/* eslint-disable @typescript-eslint/prefer-readonly */
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable @typescript-eslint/semi */
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable @typescript-eslint/consistent-type-imports */
+import { EventGroup, IAuthenticator, ICache, IMessageHandler, IMessageSender, IModule, IModuleApi, SystemConfig } from '@citrineos/base';
 import { MonitoringModule, MonitoringModuleApi } from '@citrineos/monitoring';
-import { CentralSystemImpl, initSwagger, MemoryCache, RabbitMqReceiver, RabbitMqSender, RedisCache } from '@citrineos/util';
+import { Authenticator, DirectusUtil, initSwagger, MemoryCache, RabbitMqReceiver, RabbitMqSender, RedisCache, WebsocketNetworkConnection } from '@citrineos/util';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import Ajv from "ajv";
 import addFormats from "ajv-formats"
@@ -16,6 +20,7 @@ import { ConfigurationModule, ConfigurationModuleApi } from '@citrineos/configur
 import { TransactionsModule, TransactionsModuleApi } from '@citrineos/transactions';
 import { CertificatesModule, CertificatesModuleApi } from '@citrineos/certificates';
 import { EVDriverModule, EVDriverModuleApi } from '@citrineos/evdriver';
+import { MessageRouterImpl, AdminApi } from '@citrineos/ocpprouter';
 import { ReportingModule, ReportingModuleApi } from '@citrineos/reporting';
 import { SmartChargingModule, SmartChargingModuleApi } from '@citrineos/smartcharging';
 import { sequelize } from '@citrineos/data';
@@ -26,7 +31,8 @@ class CitrineOSServer {
      * Fields
      */
     private _config: SystemConfig;
-    private _centralSystem: ICentralSystem;
+    private _authenticator: IAuthenticator;
+    private _networkConnection: WebsocketNetworkConnection;
     private _logger: Logger<ILogObj>;
     private _server: FastifyInstance;
     private _cache: ICache;
@@ -79,12 +85,27 @@ class CitrineOSServer {
             initSwagger(this._config, this._server);
         }
 
+        // Add Directus Message API flow creation if enabled
+        if (this._config.util.directus?.generateFlows) {
+            const directusUtil = new DirectusUtil(this._config, this._logger);
+            this._server.addHook("onRoute", directusUtil.addDirectusMessageApiFlowsFastifyRouteHook.bind(directusUtil));
+            this._server.addHook('onReady', async () => {
+                this._logger.info('Directus actions initialization finished');
+            });
+        }
+
         // Register AJV for schema validation
         this._server.setValidatorCompiler(({ schema, method, url, httpPart }) => {
             return this._ajv.compile(schema);
         });
 
-        this._centralSystem = new CentralSystemImpl(this._config, this._cache, undefined, undefined, this._logger, ajv);
+        this._authenticator = new Authenticator(this._cache, new sequelize.LocationRepository(config, this._logger), new sequelize.DeviceModelRepository(config, this._logger), this._logger);
+
+        const router = new MessageRouterImpl(this._config, this._cache, this._createSender(), this._createHandler(), async (identifier: string, message: string) => false, this._logger, this._ajv);
+
+        this._networkConnection = new WebsocketNetworkConnection(this._config, this._cache, this._authenticator, router, this._logger);
+
+        const api = new AdminApi(router, this._server, this._logger)
 
         process.on('SIGINT', this.shutdown.bind(this));
         process.on('SIGTERM', this.shutdown.bind(this));
@@ -101,8 +122,8 @@ class CitrineOSServer {
 
     shutdown() {
 
-        // Shut down central system
-        this._centralSystem.shutdown();
+        // Shut down ocpp router
+        this._networkConnection.shutdown();
 
         // Shutdown server
         this._server.close();
@@ -186,6 +207,12 @@ class ModuleService {
         // Initialize Swagger if enabled
         if (this._config.util.swagger) {
             initSwagger(this._config, this._server);
+        }
+
+        // Add Directus Message API flow creation if enabled
+        if (this._config.util.directus?.generateFlows) {
+            const directusUtil = new DirectusUtil(this._config, this._logger);
+            this._server.addHook("onRoute", directusUtil.addDirectusMessageApiFlowsFastifyRouteHook.bind(directusUtil));
         }
 
         // Register AJV for schema validation
