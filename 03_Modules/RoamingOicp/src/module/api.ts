@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache 2.0
 
 import { ILogObj, Logger } from 'tslog';
-import { AbstractModuleApi, AsDataEndpoint, EvseDataRecord, HttpMethod, Namespace } from "@citrineos/base";
+import { AbstractModuleApi, AsDataEndpoint, EvseDataRecord, EvseDataRecordSchema, HttpMethod, Namespace } from "@citrineos/base";
 import { IRoamingOicpModuleApi } from "./interface";
 import { RoamingOicpModule } from "./module";
 import { FastifyInstance, FastifyRequest } from "fastify";
@@ -22,7 +22,7 @@ export class RoamingOicpModuleApi extends AbstractModuleApi<RoamingOicpModule> i
      * Data Endpoints
      */
 
-    @AsDataEndpoint(Namespace.VariableAttributeType, HttpMethod.Put, Schema?)
+    @AsDataEndpoint(Namespace.VariableAttributeType, HttpMethod.Put, EvseDataRecordSchema)
     async putDeviceModelVariables(request: FastifyRequest<{ Body: EvseDataRecord, }>): Promise<EvseDataRecord> {
         return this._module.evseDataRecordRepository.create(request.body, ).then(async evseDateRecord => {
             return evseDateRecord!;

@@ -1,0 +1,559 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "javaType": "EvseDataRecord",
+    "description": "EvseDataRecord from OICP 2.3 specification",
+    "properties": {
+      "deltaType": {
+        "type": "string",
+        "enum": [
+          "update",
+          "insert",
+          "delete"
+        ],
+        "description": "In case that the operation “PullEvseData” is performed with the parameter “LastCall”, Hubject assigns this attribute to every response EVSE record in order to return the changes compared to the last call."
+      },
+      "lastUpdate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "The attribute indicates the date and time of the last update of the record. Hubject assigns this attribute to every response EVSE record."
+      },
+      "EvseID": {
+        "type": "string",
+        "pattern": "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$",
+        "description": "The ID that identifies the charging spot.\n\nA string that `MUST` be valid with respect to the following regular expression: ISO | DIN.\n\n`^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$`\nThe expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.\n\nIn case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character “*” is optional. Furthermore the ID MUST provide an “E” after the OperatorID in order to identify the ID as ISO EvseID without doubt.\n\nIn case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character “*” is mandatory.\n\nExamples ISO: “DE*AB7*E840*6487”, “DEAB7E8406487”\n\nExample DIN: “+49*810*000*438”\n",
+        "example": "+49*810*000*438"
+      },
+      "ChargingPoolID": {
+        "type": "string",
+        "pattern": "([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?P[A-Za-z0-9\\*]{1,30})",
+        "description": "VSEs may be grouped by using a charging pool id according to emi³ standard definition. The Evse Pool ID MUST match the following structure (the notation corresponds to the augmented Backus-Naur Form (ABNF) as defined in RFC5234):\n<Evse Pool ID> = <Country Code> <S> <Spot Operator ID> <S> <ID Type> <Pool ID>\n\nwith:\n\n<Country Code> = 2 ALPHA ; two character country code according to ISO-3166-1 (Alpha-2-Code).\n\n<Spot Operator ID> = 3 (ALPHA / DIGIT); three alphanumeric characters.\n\n<ID Type> = “P”; one character “P” indicating that this ID represents a “Pool”.\n\n<Pool Instance> = (ALPHA / DIGIT) 1 * 30 ( 1*(ALPHA / DIGIT) [/ <S>] ); between 1 and 31sequence of alphanumeric characters, including additional optional separators. Starts with alphanumeric character referring to a specific Pool in EVSE Operator data system.\n\nALPHA = %x41-5A / %x61-7A; according to RFC 5234 (7-Bit ASCII).\n\nDIGIT = %x30-39; according to RFC 5234 (7-Bit ASCII).\n\n<S> = *1 ( “*” ); optional separator\n\nAn example for a valid Evse Pool ID is “IT*123*P456*AB789” with :\n\n“IT” indicating Italy,\n\n“123” representing a particular Spot Operator,\n\n“P” indicating the Pool, and\n\n“456*AB789” representing one of its POOL.\n\nNote\n\nIn contrast to the eMA ID, no check digit is specified for the Evse Pool ID in this document. Alpha characters SHALL be interpreted case insensitively. emi³ strongly recommends that implementations SHOULD - use the separator between Country Code and Spot Operator ID - use the separator between Spot Operator ID and ID type\nThis leads to the following regular expression:\n\n`([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?P[A-Za-z0-9\\*]{1,30})`\n\nThis regular expression is similar to that of the ISO EvseIDType but E is replaced with P to indicate a pool.\n",
+        "example": "IT*123*P456*AB789"
+      },
+      "ChargingStationId": {
+        "type": "string",
+        "description": "The ID that identifies the charging station.",
+        "maximum": 50
+      },
+      "ChargingStationNames": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/InfoTextType"
+        },
+        "description": "Name of the charging station"
+      },
+      "HardwareManufacturer": {
+        "type": "string",
+        "maximum": 50,
+        "description": "Name of the charging point manufacturer"
+      },
+      "ChargingStationImage": {
+        "type": "string",
+        "maximum": 200,
+        "description": "URL that redirect to an online image of the related EVSEID"
+      },
+      "SubOperatorName": {
+        "type": "string",
+        "maximum": 100,
+        "description": "Name of the Sub Operator owning the Charging Station"
+      },
+      "Address": {
+        "type": "object",
+        "required": [
+          "Country",
+          "City",
+          "Street",
+          "PostalCode",
+          "HouseNum"
+        ],
+        "properties": {
+          "Country": {
+            "type": "string",
+            "description": "The CountryCodeType allows for Alpha-3 country codes only as of OICP 2.2 and OICP 2.3\n\nFor Alpha-3 (three-letter) country codes as defined in ISO 3166-1.\n\n__Examples:__\n\n| Option | Description |\n| ------ | ----------- |\n| AUT | Austria |\n| DEU | Germany |\n| FRA | France |\n| USA | United States |\n",
+            "maximum": 3,
+            "minimum": 3
+          },
+          "City": {
+            "type": "string",
+            "maximum": 50,
+            "minimum": 1
+          },
+          "Street": {
+            "type": "string",
+            "maximum": 100,
+            "minimum": 2
+          },
+          "PostalCode": {
+            "type": "string",
+            "maximum": 10
+          },
+          "HouseNum": {
+            "type": "string",
+            "maximum": 10
+          },
+          "Floor": {
+            "type": "string",
+            "maximum": 5
+          },
+          "Region": {
+            "type": "string",
+            "maximum": 50
+          },
+          "ParkingFacility": {
+            "type": "boolean"
+          },
+          "ParkingSpot": {
+            "type": "string",
+            "maximum": 5
+          },
+          "TimeZone": {
+            "type": "string",
+            "pattern": "[U][T][C][+,-][0-9][0-9][:][0-9][0-9]",
+            "description": "`[U][T][C][+,-][0-9][0-9][:][0-9][0-9]`\nThe expression validates a string as a Time zone with UTC offset.\n\nExamples:\n\nUTC+01:00\n\nUTC-05:00\n",
+            "example": "UTC-05:00"
+          }
+        }
+      },
+      "GeoCoordinates": {
+        "$ref": "#/definitions/GeoCoordinates"
+      },
+      "Plugs": {
+        "type": "array",
+        "description": "List of plugs that are supported.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "Small Paddle Inductive",
+            "Large Paddle Inductive",
+            "AVCON Connector",
+            "Tesla Connector",
+            "NEMA 5-20",
+            "Type E French Standard",
+            "Type F Schuko",
+            "Type G British Standard",
+            "Type J Swiss Standard",
+            "Type 1 Connector (Cable Attached)",
+            "Type 2 Outlet",
+            "Type 2 Connector (Cable Attached)",
+            "Type 3 Outlet",
+            "IEC 60309 Single Phase",
+            "IEC 60309 Three Phase",
+            "CCS Combo 2 Plug (Cable Attached)",
+            "CCS Combo 1 Plug (Cable Attached)",
+            "CHAdeMO"
+          ],
+          "description": "| Option | Description |\n|Small Paddle Inductive | Defined plug type. |\n| Large Paddle Inductive | Defined plug type.|\n| AVCON Connector | Defined plug type.|\n| Tesla Connector | Defined plug type.|\n| NEMA 5-20 | Defined plug type.|\n| Type E French Standard | CEE 7/5. |\n| Type F Schuko | CEE 7/4. |\n| Type G British Standard | BS 1363. |\n| Type J Swiss Standard | SEV 1011. |\n| Type 1 Connector (Cable Attached) | Cable attached to IEC 62196-1 type 1, SAE J1772 connector. |\n| Type 2 Outlet | IEC 62196-1 type 2. |\n| Type 2 Connector (Cable Attached) | Cable attached to IEC 62196-1 type 2 connector. |\n| Type 3 Outlet | IEC 62196-1 type 3. |\n| IEC 60309 Single Phase | IEC 60309. |\n| IEC 60309 Three Phase | IEC 60309. |\n| CCS Combo 2 Plug (Cable Attached) | IEC 62196-3 CDV DC Combined Charging Connector DIN SPEC 70121 refers to ISO / IEC 15118-1 DIS, -2 DIS and 15118-3. |\n| CCS Combo 1 Plug (Cable Attached) | IEC 62196-3 CDV DC Combined Charging Connector with IEC 62196-1 type 2 SAE J1772 connector. |\n| CHAdeMO | DC CHAdeMO Connector. |\n",
+          "example": "CHAdeMO"
+        }
+      },
+      "DynamicPowerLevel": {
+        "type": "boolean",
+        "description": "Informs is able to deliver different power outputs."
+      },
+      "ChargingFacilities": {
+        "type": "array",
+        "description": "List of facilities that are supported.",
+        "items": {
+          "type": "object",
+          "required": [
+            "PowerType",
+            "Power"
+          ],
+          "properties": {
+            "PowerType": {
+              "type": "string",
+              "description": "Charging Facility power type (e.g. AC or DC)",
+              "enum": [
+                "AC_1_PHASE",
+                "AC_3_PHASE",
+                "DC"
+              ]
+            },
+            "Voltage": {
+              "type": "integer",
+              "maximum": 999,
+              "minimum": 0,
+              "description": "Voltage (Line to Neutral) of the Charging Facility"
+            },
+            "Amperage": {
+              "type": "integer",
+              "maximum": 99,
+              "minimum": 0,
+              "description": "Amperage of the Charging Facility"
+            },
+            "Power": {
+              "type": "integer",
+              "maximum": 999,
+              "minimum": 0,
+              "description": "Charging Facility power in kW"
+            },
+            "ChargingModes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "| Option | Description |\n| Mode_1 | conductive connection between a standard socket-outlet of an AC supply network and electric vehicle without communication or additional safety features (IEC 61851-1) |\n| Mode_2 | conductive connection between a standard socket-outlet of an AC supply network and electric vehicle with communication and additional safety features (IEC 61851-1) |\n| Mode_3 | conductive connection of an EV to an AC EV supply equipment permanently connected to an AC supply network with communication and additional safety features (IEC 61851-1) |\n| Mode_4 | conductive connection of an EV to an AC or DC supply network utilizing a DC EV supply equipment, with (high-level) communication and additional safety features (IEC 61851-1) |\n| CHAdeMO | CHAdeMo Specification |\n",
+                "enum": [
+                  "Mode_1",
+                  "Mode_2",
+                  "Mode_3",
+                  "Mode_4",
+                  "CHAdeMO"
+                ]
+              },
+              "description": "List of charging modes that are supported."
+            }
+          }
+        }
+      },
+      "RenewableEnergy": {
+        "type": "boolean",
+        "description": "If the Charging Station provides only renewable energy then the value `MUST` be ”true”, if it use grey energy then value `MUST` be “false”.\n"
+      },
+      "EnergySource": {
+        "type": "array",
+        "description": "List of energy source that the charging station uses to supply electric energy.",
+        "items": {
+          "type": "object",
+          "description": "energy source that the charging station uses to supply electric energy",
+          "properties": {
+            "Energy": {
+              "type": "string",
+              "description": "| Option | Description |\n| Solar | Energy coming from Solar radiation |\n| Wind | Energy produced by wind |\n| HydroPower | Energy produced by the movement of water |\n| GeothermalEnergy | Energy coming from the sub-surface of the earth |\n| Biomass | Energy produced using plant or animal material as fuel |\n| Coal | Energy produced using coal as fuel |\n| NuclearEnergy | Energy being produced by nuclear fission |\n| Petroleum | Energy produced by using Petroleum as fuel |\n| NaturalGas | Energy produced using Natural Gas as fuel |\n",
+              "enum": [
+                "Solar",
+                "Wind",
+                "HydroPower",
+                "GeothermalEnergy",
+                "Biomass",
+                "Coal",
+                "NuclearEnergy",
+                "Petroleum",
+                "NaturalGas"
+              ]
+            },
+            "Percentage": {
+              "type": "integer",
+              "description": "Percentage of EnergyType being used by the charging stations",
+              "maximum": 99,
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "EnvironmentalImpact": {
+        "type": "object",
+        "properties": {
+          "CO2Emission": {
+            "type": "number",
+            "description": "Total CO2 emited by the energy source being used by this charging station to supply energy to EV. Units are in g/kWh",
+            "maximum": 99999
+          },
+          "NuclearWaste": {
+            "type": "number",
+            "description": "Total NuclearWaste emited by the energy source being used by this charging station to supply energy to EV. Units are in g/kWh",
+            "maximum": 99999
+          }
+        }
+      },
+      "CalibrationLawDataAvailability": {
+        "type": "string",
+        "description": "| Option | Description |\n| Local | Calibration law data is shown at the charging station. |\n| External | Calibration law data is provided externaly. |\n| Not Available | Calibration law data is not provided. |\n",
+        "enum": [
+          "Local",
+          "External",
+          "Not Available"
+        ]
+      },
+      "AuthenticationModes": {
+        "type": "array",
+        "description": "List of authentication modes that are supported.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "NFC RFID Classic",
+            "NFC RFID DESFire",
+            "PnC",
+            "REMOTE",
+            "Direct Payment",
+            "No Authentication Required"
+          ],
+          "description": "| Option | Description |\n| NFC RFID Classic | Defined authentication. |\n| NFC RFID DESFire | Defined authentication. |\n| PnC | ISO/IEC 15118. |\n| REMOTE | App, QR-Code, Phone. |\n| Direct Payment | Remote use via direct payment. E.g. intercharge direct |\n| No Authentication Required | Not Authentication Method Required |\n"
+        }
+      },
+      "MaxCapacity": {
+        "type": "integer",
+        "description": "This field is used if the EVSE has a limited capacity (e.g. built-in battery). Values must be given in kWh."
+      },
+      "PaymentOptions": {
+        "type": "array",
+        "description": "List of payment options that are supported.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "No Payment",
+            "Direct",
+            "Contract"
+          ],
+          "description": "| Option | Description |\n| ------ | ----------- |\n| No payment | Free. |\n| Direct | e. g. Cash, Card, SMS, ... |\n| Contract | i. e. Subscription  |\n\nNote\n\n`No Payment` can not be combined with other payment option\n",
+          "example": "Direct"
+        }
+      },
+      "ValueAddedServices": {
+        "type": "array",
+        "description": "List of value added services that are supported.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "Reservation",
+            "DynamicPricing",
+            "ParkingSensors",
+            "MaximumPowerCharging",
+            "PredictiveChargePointUsage",
+            "ChargingPlans",
+            "RoofProvided",
+            "None"
+          ],
+          "description": "| Option | Description |\n| ------ | ----------- |\n| Reservation | Can an EV driver reserve the charging sport via remote services? |\n| DynamicPricing | Does the EVSE ID support dynamic pricing? |\n| ParkingSensors | Is dynamic status info on the parking area in front of the EVSE-ID available? |\n| MaximumPowerCharging | Does the EVSE-ID offer a dynamic maximum power charging? |\n| PredictiveChargePointUsage | Is predictive charge Point usage info available for the EVSE-ID? |\n| ChargingPlans | Does the EVSE-ID offer charging plans, e.g. As described in ISO15118-2? |\n| RoofProvided | Indicates if the charging station is under a roof |\n| None | There are no value-added services available. |\n"
+        }
+      },
+      "Accessibility": {
+        "type": "string",
+        "enum": [
+          "Free publicly accessible",
+          "Restricted access",
+          "Paying publicly accessible",
+          "Test Station"
+        ],
+        "description": "Specifies how the charging station can be accessed.\n\n| Option | Description |\n| ------ | ----------- |\n| Free publicly accessible | EV Driver can reach the charging point without paying a fee, e.g. street, free public place, free parking lot, etc. |\n| Restricted access | EV Driver needs permission to reach the charging point, e.g. Campus, building complex, etc. |\n| Paying publicly accessible | EV Driver needs to pay a fee in order to reach the charging point, e.g. payable parking garage, etc. |\n| Test Station | Station is just for testing purposes. Access may be restricted. |\n",
+        "example": "Free publicly accessible"
+      },
+      "AccessibilityLocation": {
+        "type": "string",
+        "enum": [
+          "OnStreet",
+          "ParkingLot",
+          "ParkingGarage",
+          "UndergroundParkingGarage"
+        ],
+        "description": "| Option | Description |\n| ------ | ----------- |\n| OnStreet | The charging station is located on the street|\n| ParkingLot | The Charging Point is located inside a Parking Lot|\n| ParkingGarage | The Charging Point is located inside a Parking Garage|\n| UndergroundParkingGarage | The Charging Point is located inside an Underground Parking Garage |\n"
+      },
+      "HotlinePhoneNumber": {
+        "type": "string",
+        "pattern": "^\\+[0-9]{5,15}$",
+        "description": "`^\\+[0-9]{5,15}$`\nThe expression validates the string as a telephone number starting with “+” and containing only numbers.\n\nExample: “+0305132787”\n"
+      },
+      "AdditionalInfo": {
+        "type": "array",
+        "description": "Optional information.",
+        "items": {
+          "$ref": "#/definitions/InfoTextType"
+        }
+      },
+      "ChargingStationLocationReference": {
+        "type": "array",
+        "description": "Inform the EV driver where the ChargingPoint could be accessed.",
+        "items": {
+          "$ref": "#/definitions/InfoTextType"
+        }
+      },
+      "GeoChargingPointEntrance": {
+        "$ref": "#/definitions/GeoCoordinates"
+      },
+      "IsOpen24Hours": {
+        "type": "boolean",
+        "description": "Set in case the charging spot is open 24 hours."
+      },
+      "OpeningTimes": {
+        "type": "array",
+        "description": "Opening time in case that the charging station cannot be accessed around the clock.",
+        "items": {
+          "$ref": "#/definitions/OpeningTimes"
+        }
+      },
+      "HubOperatorID": {
+        "type": "string",
+        "pattern": "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$",
+        "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN\n\n^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$\nThe expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character “*” is optional.\n\nIn case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character “*” is mandatory.\n\nExamples ISO: “DE*A36”, “DEA36”\n\nExample DIN: “+49*536”\n",
+        "example": "+49*536"
+      },
+      "ClearinghouseID": {
+        "type": "string",
+        "maximum": 20,
+        "description": "Identification of the corresponding clearing house in the event that roaming between different clearing houses `MUST` be processed in the future.\n"
+      },
+      "IsHubjectCompatible": {
+        "type": "boolean",
+        "description": "Is eRoaming via intercharge at this charging station possible? If set to \"false\" the charge spot will not be started/stopped remotely via Hubject."
+      },
+      "DynamicInfoAvailable": {
+        "type": "string",
+        "enum": [
+          "true",
+          "false",
+          "auto"
+        ],
+        "description": "Values: true / false / auto This attribute indicates whether a CPO provides (dynamic) EVSE Status info in addition to the (static) EVSE Data for this EVSERecord. Value auto is set to true by Hubject if the operator offers Hubject EVSEStatus data."
+      }
+    },
+    "required": [
+      "EvseID",
+      "ChargingStationNames",
+      "Address",
+      "GeoCoordinates",
+      "Plugs",
+      "ChargingFacilities",
+      "RenewableEnergy",
+      "CalibrationLawDataAvailability",
+      "AuthenticationModes",
+      "PaymentOptions",
+      "ValueAddedServices",
+      "Accessibility",
+      "HotlinePhoneNumber",
+      "IsOpen24Hours",
+      "IsHubjectCompatible",
+      "DynamicInfoAvailable"
+    ],
+    "definitions": {
+      "InfoTextType": {
+        "type": "object",
+        "required": [
+          "lang",
+          "value"
+        ],
+        "properties": {
+          "lang": {
+            "type": "string",
+            "pattern": "^[a-z]{2,3}(?:-[A-Z]{2,3}(?:-[a-zA-Z]{4})?)?(?:-x-[a-zA-Z0-9]{1,8})?$",
+            "description": "`^[a-z]{2,3}(?:-[A-Z]{2,3}(?:-[a-zA-Z]{4})?)?(?:-x-[a-zA-Z0-9]{1,8})?$`\n\nThe language in which the additional info text is provided\n\nThe expression validates the string as a language code as per ISO-639-1 or ISO-639-2/T\n\nThe LanguageCodeType is used in the AdditionalInfo field, which is part of the EvseDataRecordType.\n"
+          },
+          "value": {
+            "type": "string",
+            "maximum": 150,
+            "description": "The Additional Info text"
+          }
+        }
+      },
+      "GeoCoordinates": {
+        "type": "object",
+        "description": "Important\n\n__One of the following three options `MUST` be provided__\n",
+        "properties": {
+          "Google": {
+            "type": "object",
+            "description": "Geocoordinates using Google Structure\nBased on WGS84\n",
+            "required": [
+              "Coordinates"
+            ],
+            "properties": {
+              "Coordinates": {
+                "type": "string",
+                "pattern": "^-?1?\\d{1,2}\\.\\d{1,6}\\s*\\,?\\s*-?1?\\d{1,2}\\.\\d{1,6}$",
+                "description": "A string that `MUST` be valid with respect to the following regular expression:\n\n`^-?1?\\d{1,2}\\.\\d{1,6}\\s*\\,?\\s*-?1?\\d{1,2}\\.\\d{1,6}$`\nThe expression validates the string as geo coordinates with respect to the Google standard. The string contains latitude and longitude (in this sequence) separated by a space.\n\nExample: “47.662249 9.360922”\n",
+                "example": "47.662249 9.360922"
+              }
+            }
+          },
+          "DecimalDegree": {
+            "type": "object",
+            "description": "Geocoordinates using DecimalDegree Structure",
+            "required": [
+              "Longitude",
+              "Latitude"
+            ],
+            "properties": {
+              "Longitude": {
+                "type": "string",
+                "pattern": "^-?1?\\d{1,2}\\.\\d{1,6}$",
+                "description": "A string that `MUST` be valid with respect to the following regular expression:\n\n`^-?1?\\d{1,2}\\.\\d{1,6}$`\nThe expression validates the string as a geo coordinate (longitude or latitude) with decimal degree syntax.\n\nExamples: “9.360922”, “-21.568201”\n",
+                "example": "9.360922"
+              },
+              "Latitude": {
+                "type": "string",
+                "pattern": "^-?1?\\d{1,2}\\.\\d{1,6}$",
+                "description": "A string that `MUST` be valid with respect to the following regular expression:\n\n`^-?1?\\d{1,2}\\.\\d{1,6}$`\nThe expression validates the string as a geo coordinate (longitude or latitude) with decimal degree syntax.\n\nExamples: “9.360922”, “-21.568201”\n",
+                "example": "9.360922"
+              }
+            }
+          },
+          "DegreeMinuteSeconds": {
+            "type": "object",
+            "description": "Geocoordinates using DegreeMinutesSeconds Structure",
+            "required": [
+              "Longitude",
+              "Latitude"
+            ],
+            "properties": {
+              "Longitude": {
+                "type": "string",
+                "pattern": "^-?1?\\d{1,2}°[ ]?\\d{1,2}'[ ]?\\d{1,2}\\.\\d+''$",
+                "description": "A string that `MUST` be valid with respect to the following regular expression:\n\n`^-?1?\\d{1,2}°[ ]?\\d{1,2}'[ ]?\\d{1,2}\\.\\d+''$`\nThe expression validates the string as a geo coordinate (longitude or latitude) consisting of degree, minutes, and seconds\n\nExamples: “9°21'39.32''”, “-21°34'23.16''\n",
+                "example": "9°21'39.32''"
+              },
+              "Latitude": {
+                "type": "string",
+                "pattern": "^-?1?\\d{1,2}°[ ]?\\d{1,2}'[ ]?\\d{1,2}\\.\\d+''$",
+                "description": "A string that `MUST` be valid with respect to the following regular expression:\n\n`^-?1?\\d{1,2}°[ ]?\\d{1,2}'[ ]?\\d{1,2}\\.\\d+''$`\nThe expression validates the string as a geo coordinate (longitude or latitude) consisting of degree, minutes, and seconds\n\nExamples: “9°21'39.32''”, “-21°34'23.16''\n",
+                "example": "9°21'39.32''"
+              }
+            }
+          }
+        }
+      },
+      "OpeningTimes": {
+        "type": "object",
+        "required": [
+          "Period",
+          "on"
+        ],
+        "properties": {
+          "Period": {
+            "type": "array",
+            "description": "The starting and end time for pricing product applicability in the specified period\n",
+            "items": {
+              "type": "object",
+              "required": [
+                "begin",
+                "end"
+              ],
+              "properties": {
+                "begin": {
+                  "type": "string",
+                  "description": "The opening time",
+                  "pattern": "[0-9]{2}:[0-9]{2}"
+                },
+                "end": {
+                  "type": "string",
+                  "description": "The closing time",
+                  "pattern": "[0-9]{2}:[0-9]{2}"
+                }
+              }
+            }
+          },
+          "on": {
+            "type": "string",
+            "enum": [
+              "Everyday",
+              "Workdays",
+              "Weekend",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ],
+            "description": "Day values to be used in specifying periods on which the product is available. Workdays = Monday – Friday, Weekend = Saturday – Sunday"
+          }
+        },
+        "example": {
+          "Period": [
+            {
+              "begin": "08:30",
+              "end": "22:45"
+            }
+          ],
+          "on": "Everyday"
+        }
+      }
+    },
+    "type": "object"
+  }

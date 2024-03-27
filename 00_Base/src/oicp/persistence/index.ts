@@ -3,4 +3,4 @@
 //
 // SPDX-License-Identifier: Apache 2.0
 
-export { default as OcpiOpenApiSpec } from './schemas/openapi.json';
+export { default as EvseDataRecordSchema } from './schemas/EvseDataRecordSchema.json';
