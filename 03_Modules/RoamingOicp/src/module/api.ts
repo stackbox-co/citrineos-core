@@ -22,7 +22,7 @@ export class RoamingOicpModuleApi extends AbstractModuleApi<RoamingOicpModule> i
      * Data Endpoints
      */
 
-    @AsDataEndpoint(Namespace.VariableAttributeType, HttpMethod.Put,)
+    @AsDataEndpoint(Namespace.VariableAttributeType, HttpMethod.Put, Schema?)
     async putDeviceModelVariables(request: FastifyRequest<{ Body: EvseDataRecord, }>): Promise<EvseDataRecord> {
         return this._module.evseDataRecordRepository.create(request.body, ).then(async evseDateRecord => {
             return evseDateRecord!;
