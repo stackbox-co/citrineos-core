@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache 2.0
 
 import { ILogObj, Logger } from 'tslog';
-import { AbstractModuleApi, AsDataEndpoint, EvseDataRecord, EvseDataRecordSchema, HttpMethod, Namespace } from "@citrineos/base";
+import { AbstractModuleApi, AsDataEndpoint, CallAction, EvseDataRecord, EvseDataRecordSchema, HttpMethod, Namespace } from "@citrineos/base";
 import { IRoamingOicpModuleApi } from "./interface";
 import { RoamingOicpModule } from "./module";
 import { FastifyInstance, FastifyRequest } from "fastify";
@@ -31,5 +31,28 @@ export class RoamingOicpModuleApi extends AbstractModuleApi<RoamingOicpModule> i
         // });
         this._logger.info("putEvseDataRecord called");
         return request.body;
+    }
+
+    /**
+    * Overrides superclass method to generate the URL path based on the input {@link CallAction} and the module's endpoint prefix configuration.
+    *
+    * @param {CallAction} input - The input {@link CallAction}.
+    * @return {string} - The generated URL path.
+    */
+    protected _toMessagePath(input: CallAction): string {
+        const endpointPrefix = this._module.config.modules.monitoring.endpointPrefix;
+        return super._toMessagePath(input, endpointPrefix);
+    }
+
+    
+    /**
+     * Overrides superclass method to generate the URL path based on the input {@link Namespace} and the module's endpoint prefix configuration.
+     *
+     * @param {CallAction} input - The input {@link Namespace}.
+     * @return {string} - The generated URL path.
+     */
+    protected _toDataPath(input: Namespace): string {
+        const endpointPrefix = this._module.config.modules.monitoring.endpointPrefix;
+        return super._toDataPath(input, endpointPrefix);
     }
 }
