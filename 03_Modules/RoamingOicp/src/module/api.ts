@@ -40,7 +40,7 @@ export class RoamingOicpModuleApi extends AbstractModuleApi<RoamingOicpModule> i
     * @return {string} - The generated URL path.
     */
     protected _toMessagePath(input: CallAction): string {
-        const endpointPrefix = this._module.config.modules.monitoring.endpointPrefix;
+        const endpointPrefix = this._module.config.modules.roamingoicp.endpointPrefix;
         return super._toMessagePath(input, endpointPrefix);
     }
 
@@ -52,7 +52,7 @@ export class RoamingOicpModuleApi extends AbstractModuleApi<RoamingOicpModule> i
      * @return {string} - The generated URL path.
      */
     protected _toDataPath(input: Namespace): string {
-        const endpointPrefix = this._module.config.modules.monitoring.endpointPrefix;
+        const endpointPrefix = this._module.config.modules.roamingoicp.endpointPrefix;
         return super._toDataPath(input, endpointPrefix);
     }
 }
