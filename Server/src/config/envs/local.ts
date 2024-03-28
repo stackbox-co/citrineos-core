@@ -33,6 +33,9 @@ export function createLocalConfig() {
             reporting: {
                 endpointPrefix: "/reporting"
             },
+            roamingoicp: {
+                endpointPrefix: "/roamingoicp"
+            },
             smartcharging: {
                 endpointPrefix: "/smartcharging"
             },

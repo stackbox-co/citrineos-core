@@ -57,6 +57,11 @@ export const systemConfigInputSchema = z.object({
             port: z.number().int().positive().default(8081).optional(),
         }),
         reporting: z.object({
+            endpointPrefix: z.string().default(EventGroup.RoamingOicp).optional(),
+            host: z.string().default("localhost").optional(),
+            port: z.number().int().positive().default(8081).optional(),
+        }),
+        roamingoicp: z.object({
             endpointPrefix: z.string().default(EventGroup.Reporting).optional(),
             host: z.string().default("localhost").optional(),
             port: z.number().int().positive().default(8081).optional(),
