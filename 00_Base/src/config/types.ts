@@ -217,6 +217,11 @@ export const systemConfigSchema = z.object({
             host: z.string().optional(),
             port: z.number().int().positive().optional(),
         }),
+        roamingoicp: z.object({
+            endpointPrefix: z.string(),
+            host: z.string().optional(),
+            port: z.number().int().positive().optional(),
+        }),
         smartcharging: z.object({
             endpointPrefix: z.string(),
             host: z.string().optional(),
