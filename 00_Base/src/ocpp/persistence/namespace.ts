@@ -14,6 +14,7 @@ export enum Namespace {
     ChargingStation = 'ChargingStation',
     ComponentType = 'Component',
     EVSEType = 'Evse',
+    EvseDataRecord = 'EvseDataRecord',
     EventDataType = 'EventData',
     IdTokenInfoType = 'IdTokenInfo',
     IdTokenType = 'IdToken',
