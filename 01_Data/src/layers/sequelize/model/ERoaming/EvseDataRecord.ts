@@ -3,14 +3,14 @@
 //
 // SPDX-License-Identifier: Apache 2.0
 
-import { EvseDataRecord, EvseDataRecordAccessibilityEnum, EvseDataRecordAccessibilityLocationEnum, EvseDataRecordAddress, EvseDataRecordAuthenticationModesEnum, EvseDataRecordCalibrationLawDataAvailabilityEnum, EvseDataRecordChargingFacilities, EvseDataRecordDeltaTypeEnum, EvseDataRecordDynamicInfoAvailableEnum, EvseDataRecordEnergySource, EvseDataRecordEnvironmentalImpact, EvseDataRecordPaymentOptionsEnum, EvseDataRecordPlugsEnum, EvseDataRecordValueAddedServicesEnum, EvseID, GeoCoordinates, InfoTextType, OcpiNamespace, OpeningTimes, OperatorID } from "@citrineos/base";
+import { EvseDataRecord, EvseDataRecordAccessibilityEnum, EvseDataRecordAccessibilityLocationEnum, EvseDataRecordAddress, EvseDataRecordAuthenticationModesEnum, EvseDataRecordCalibrationLawDataAvailabilityEnum, EvseDataRecordChargingFacilities, EvseDataRecordDeltaTypeEnum, EvseDataRecordDynamicInfoAvailableEnum, EvseDataRecordEnergySource, EvseDataRecordEnvironmentalImpact, EvseDataRecordPaymentOptionsEnum, EvseDataRecordPlugsEnum, EvseDataRecordValueAddedServicesEnum, EvseID, GeoCoordinates, InfoTextType, Namespace, OpeningTimes, OperatorID } from "@citrineos/base";
 import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 
 @Table
 export class OicpEvseDataRecord extends Model implements EvseDataRecord {
     
 
-    static readonly MODEL_NAME: string = OcpiNamespace.EvseDataRecord;
+    static readonly MODEL_NAME: string = Namespace.EvseDataRecord;
 
     /**
     * Fields
