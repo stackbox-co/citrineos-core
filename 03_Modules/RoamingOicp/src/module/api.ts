@@ -8,9 +8,8 @@ import { AbstractModuleApi, AsDataEndpoint, CallAction, EvseDataRecord, EvseData
 import { IRoamingOicpModuleApi } from "./interface";
 import { RoamingOicpModule } from "./module";
 import { FastifyInstance, FastifyRequest } from "fastify";
+import { CreateOrUpdateEvseDataRecordQuerySchema } from '@citrineos/data';
 
-// const querySchema = {"properties": {"evseId": {"type": "string",}}, "required": ["evseId"]}
-const querySchema = {"evseId": {"type": "string",}}
 
 /**
  * Server API for the RoamingOicp module.
@@ -24,7 +23,7 @@ export class RoamingOicpModuleApi extends AbstractModuleApi<RoamingOicpModule> i
     /**
      * Data Endpoints
      */
-    @AsDataEndpoint(Namespace.EvseDataRecord, HttpMethod.Put, querySchema, EvseDataRecordSchema)
+    @AsDataEndpoint(Namespace.EvseDataRecord, HttpMethod.Put, CreateOrUpdateEvseDataRecordQuerySchema, EvseDataRecordSchema)
     async putEvseDataRecord(request: FastifyRequest<{ Body: EvseDataRecord, Querystring: { evseId: string; }}>): Promise<EvseDataRecord> {
         // return this._module.evseDataRecordRepository.create(request.body, ).then(async evseDateRecord => {
         //     return evseDateRecord!;
